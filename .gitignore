@@ -1,0 +1,10 @@
+# Secrets
+database.properties
+
+# Build output
+target/
+
+# IDE
+.vscode/
+.idea/
+*.iml

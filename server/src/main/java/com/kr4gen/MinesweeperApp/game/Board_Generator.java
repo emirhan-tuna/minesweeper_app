@@ -30,7 +30,7 @@ public class Board_Generator{
     public void createBoard(int startX, int startY) {
         setProtectedCells(startX, startY);
 
-        for (int i = 0; i < mineNumbers;) {
+        for (int i = 0; i < mineNumbers; i++) {
             int x = r.nextInt(0 , height);
             int y = r.nextInt(0, width);
             
@@ -38,7 +38,6 @@ public class Board_Generator{
                 Mine_Cell newMine = new Mine_Cell(x, y);
 
                 board[x][y] = newMine;
-                mineNumbers--;
                 mineList.add(newMine);
             }
         }

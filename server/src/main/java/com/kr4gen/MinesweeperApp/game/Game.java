@@ -1,13 +1,14 @@
 package com.kr4gen.MinesweeperApp.game;
 
 public class Game {
-    private Board_Generator gen;
-    private boolean active;
-    private int winCode;
+    public enum GameState {NOT_ON, ONGOING, WIN, LOSE}
+
+    private final Board_Generator gen;
+    private GameState state;
 
     public Game(int width, int height, int mine) {
         gen = new Board_Generator(height, width, mine);
-        active = true;
+        this.state = GameState.NOT_ON;
     }
 
     public int minesLeft() {
@@ -23,16 +24,19 @@ public class Game {
     }
 
     public void clickedLeft(int x, int y) {
-        if (gen.board[x][y].isMine()) {
-            this.winCode = 1;
-            active = false;
-        } else {
-            reveal(x, y);
-            if (allSafeCellsRevealed()) {
-                this.winCode = 0;
-                active = false;
+        if (state == GameState.ONGOING) {
+            if (gen.board[x][y].isMine()) {
+                if (!gen.board[x][y].isFlagged) {
+                    state = GameState.LOSE;
+                }
+            } else {
+                reveal(x, y);
+                if (allSafeCellsRevealed()) {
+                    state = GameState.WIN;
+                }
             }
         }
+
     }
 
     private boolean allSafeCellsRevealed() {
@@ -47,21 +51,22 @@ public class Game {
     }
 
     public void clickedRight(int x, int y) {
-        if (gen.board[x][y].isRevealed) {
-            return;
-        }
+        if (state == GameState.ONGOING) {
+            if (gen.board[x][y].isRevealed) {
+                return;
+            }
 
-        if (gen.board[x][y].isFlagged) {
-            gen.board[x][y].isFlagged = false;
-            gen.remainingMines++;
-        } else {
-            gen.board[x][y].isFlagged = true;
-            gen.remainingMines--;
-        }
+            if (gen.board[x][y].isFlagged) {
+                gen.board[x][y].isFlagged = false;
+                gen.remainingMines++;
+            } else {
+                gen.board[x][y].isFlagged = true;
+                gen.remainingMines--;
+            }
 
-        if(allSafeCellsRevealed()) {
-            this.winCode = 0;
-            this.active = false;
+            if (allSafeCellsRevealed()) {
+                this.state = GameState.WIN;
+            }
         }
     }
 
@@ -92,18 +97,17 @@ public class Game {
         if (getMinesAround(x, y) == 0 && !gen.board[x][y].isMine()) {
             for (int i = x - 1; i <= x + 1; i++) {
                 for (int j = y - 1; j <= y + 1; j++) {
+                    if (gen.board[i][j].isFlagged) {
+                        gen.board[i][j].isFlagged = false;
+                    }
                     reveal(i, j);
                 }
             }
         }
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public int gameOver() {
-        return winCode;
+    public GameState gameOver() {
+        return state;
     }
 
     public boolean isFlagged(int x, int y){

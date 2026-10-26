@@ -1,4 +1,4 @@
-package com.minesweeper_app.BoardGeneration;
+package com.kr4gen.MinesweeperApp.game;
 
 public class Empty_Cell extends Cell{
     public Empty_Cell(int x, int y) {

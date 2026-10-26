@@ -1,13 +1,22 @@
 package com.minesweeper_app.GUI;
 
+import com.minesweeper_app.MinesweeperApplication;
+import com.minesweeper_app.startup.StageReadyEvent;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class Render extends Application{
 
+    private ConfigurableApplicationContext appCont;
+
+
+
     @Override 
     public void start(Stage stage) {
-        stage.setTitle("Test");
+        stage.setTitle("test");
         stage.setScene(new LoginScreen().createScreen(stage));
         stage.show();
     }
@@ -15,15 +24,4 @@ public class Render extends Application{
     public static void main(String[] args) {
         launch();
     }
-
-    /*public Scene createStartScene() {
-        Label label = new Label("Welcome enter your name!");
-        
-        TextInputDialog input = new TextInputDialog();
-        input.setHeaderText("Name");
-        
-        Optional<String> answer = input.showAndWait();
-
-        return new Scene(new StackPane(label, new Text(answer.get())), 400, 300);
-    }*/
 }

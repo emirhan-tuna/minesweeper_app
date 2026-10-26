@@ -1,5 +1,5 @@
 # Secrets
-database.properties
+server/application-local.properties
 
 # Build output
 target/

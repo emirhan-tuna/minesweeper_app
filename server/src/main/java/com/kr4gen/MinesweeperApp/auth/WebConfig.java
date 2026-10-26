@@ -1,0 +1,19 @@
+package com.kr4gen.MinesweeperApp.auth;
+
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+public class WebConfig implements WebMvcConfigurer {
+    private final AuthInterceptor interceptor;
+
+    public WebConfig(AuthInterceptor interceptor) {
+        this.interceptor = interceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor)
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("api/auth/register", "/api/auth/login");
+    }
+}

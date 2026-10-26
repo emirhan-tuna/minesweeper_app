@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS minesweeper
-    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE minesweeper;
-
 CREATE TABLE IF NOT EXISTS users (
     id            CHAR(36) PRIMARY KEY,
     username      VARCHAR(50)  NOT NULL UNIQUE,
@@ -11,8 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- One row per winning time, so a user's full history can be listed or ranked.
 CREATE TABLE IF NOT EXISTS user_times (
-    id            CHAR(36) PRIMARY KEY,
-    user_id       CHAR(36)          NOT NULL,
+    id            BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    user_id       CHAR(36)     NOT NULL,
     difficulty    VARCHAR(20)  NOT NULL,
     time_sec      INT          NOT NULL,
     achieved_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,

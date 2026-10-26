@@ -1,4 +1,4 @@
-package com.minesweeper_app.BoardGeneration;
+package com.kr4gen.MinesweeperApp.game;
 import java.util.ArrayList;
 import java.util.Random;
 

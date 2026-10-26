@@ -1,7 +1,4 @@
-package com.minesweeper_app.BoardGeneration;
-
-import java.util.ArrayList;
-import java.util.Collections;
+package com.kr4gen.MinesweeperApp.game;
 
 public class Game {
     private Board_Generator gen;

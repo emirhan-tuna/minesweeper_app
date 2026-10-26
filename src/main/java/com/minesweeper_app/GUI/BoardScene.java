@@ -124,8 +124,6 @@ public class BoardScene extends Screens{
     }
 
     public void refresh() {
-        
-
         for (int i = 0; i < game.getHeight(); i++) {
             for (int j = 0; j < game.getWidth(); j++) {
                 buttons[i][j].setGraphic(null);

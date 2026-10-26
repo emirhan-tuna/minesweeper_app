@@ -1,4 +1,4 @@
-package com.minesweeper_app.BoardGeneration;
+package com.kr4gen.MinesweeperApp.game;
 
 public abstract class Cell implements Comparable<Cell>{
     protected boolean isProtected;

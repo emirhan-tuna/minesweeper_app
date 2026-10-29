@@ -1,0 +1,53 @@
+@base = http://localhost:8080
+@token = aAGTKMQqFG7v3WPNpiaOaFDK0_mI9kvORgLkp_Zl5n4
+@game = 708b0439-9a70-4e4d-939e-106ade2e3b90
+### Register (copy "token" from the response into @token)
+POST {{base}}/api/auth/register
+Content-Type: application/json
+
+{"username": "emirhan", "password": "secret"}
+
+### Login
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{"username": "emirhan", "password": "secret"}
+
+### New game (copy "id" into @game)
+POST {{base}}/api/games
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"diff": "BEGINNER"}
+
+### Reveal a cell
+POST {{base}}/api/games/{{game}}/reveal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"row": 2, "col": 0}
+
+### Flag a cell
+POST {{base}}/api/games/{{game}}/flag
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"row": 2, "col": 2}
+
+### My times
+GET {{base}}/api/scores/me?diff=BEGINNER
+Authorization: Bearer {{token}}
+
+### Leaderboard
+GET {{base}}/api/scores/top?diff=BEGINNER
+Authorization: Bearer {{token}}
+
+{
+"id": "6c1f...",
+"diff": "BEGINNER",
+"width": 9, "height": 9, "minesLeft": 10,
+"status": "PLAYING",
+"elapsedSec": 0,
+"rows": ["#########", "##11121##", "##10001##", "##10001##", "##10001##",
+"##21112##", "#########", "#########", "#########"]
+}

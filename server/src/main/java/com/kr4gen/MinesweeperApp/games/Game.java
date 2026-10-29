@@ -1,4 +1,4 @@
-package com.kr4gen.MinesweeperApp.game;
+package com.kr4gen.MinesweeperApp.games;
 
 public class Game {
     public enum GameState {NOT_ON, ONGOING, WIN, LOSE}
@@ -11,10 +11,6 @@ public class Game {
         this.state = GameState.NOT_ON;
     }
 
-    public int minesLeft() {
-        return gen.remainingMines;
-    }
-
     public int getWidth() {
         return gen.width;
     }
@@ -25,18 +21,19 @@ public class Game {
 
     public void clickedLeft(int x, int y) {
         if (state == GameState.ONGOING) {
-            if (gen.board[x][y].isMine()) {
-                if (!gen.board[x][y].isFlagged) {
+            if (!gen.board[x][y].isFlagged) {
+                if (gen.board[x][y].isMine()) {
                     state = GameState.LOSE;
-                }
-            } else {
-                reveal(x, y);
-                if (allSafeCellsRevealed()) {
-                    state = GameState.WIN;
+                } else {
+                    reveal(x, y);
+                    if (allSafeCellsRevealed()) {
+                        state = GameState.WIN;
+                    }
                 }
             }
+        } else {
+            startGame(x, y);
         }
-
     }
 
     private boolean allSafeCellsRevealed() {
@@ -63,16 +60,15 @@ public class Game {
                 gen.board[x][y].isFlagged = true;
                 gen.remainingMines--;
             }
-
-            if (allSafeCellsRevealed()) {
-                this.state = GameState.WIN;
-            }
         }
     }
 
     public void startGame(int x, int y) {
-        gen.createBoard(x, y);
-        reveal(x, y);
+        if (state == GameState.NOT_ON) {
+            state = GameState.ONGOING;
+            gen.createBoard(x, y);
+            reveal(x, y);
+        }
     }
 
     public int getMinesAround(int x, int y) {
@@ -83,8 +79,12 @@ public class Game {
         return gen.board[x][y].isRevealed;
     }
 
-    public void reveal(int x, int y) {
+    private void reveal(int x, int y) {
         if (x < 0 || x >= gen.height || y < 0 || y >= gen.width) {
+            return;
+        }
+
+        if (gen.board[x][y].isFlagged) {
             return;
         }
 
@@ -97,16 +97,13 @@ public class Game {
         if (getMinesAround(x, y) == 0 && !gen.board[x][y].isMine()) {
             for (int i = x - 1; i <= x + 1; i++) {
                 for (int j = y - 1; j <= y + 1; j++) {
-                    if (gen.board[i][j].isFlagged) {
-                        gen.board[i][j].isFlagged = false;
-                    }
                     reveal(i, j);
                 }
             }
         }
     }
 
-    public GameState gameOver() {
+    public GameState getStatus() {
         return state;
     }
 
@@ -116,5 +113,17 @@ public class Game {
 
     public int getMines() {
         return gen.remainingMines;
+    }
+
+    public boolean isOver() {
+        return state == GameState.LOSE || state == GameState.WIN;
+    }
+
+    public boolean notBounds(int x, int y) {
+        return x < 0 || x >= getHeight() || y < 0 || y >= getWidth();
+    }
+
+    public boolean isMine(int x, int y) {
+        return gen.board[x][y].isMine();
     }
 }

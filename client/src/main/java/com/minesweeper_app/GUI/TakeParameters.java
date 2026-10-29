@@ -2,8 +2,7 @@ package com.minesweeper_app.GUI;
 
 import java.util.Optional;
 
-import com.minesweeper_app.BoardGeneration.Game;
-
+import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,15 +26,15 @@ public class TakeParameters extends Screens{
         Button buttonBig = new Button("Big");
 
         buttonSmall.setOnAction(event -> {
-            s.setScene(new BoardScene(new Game(9, 9, 10), name, Constants.beginner).createScreen(s));
+            start(s, Constants.beginner);
         });
 
         buttonMed.setOnAction(event -> {
-            s.setScene(new BoardScene(new Game(16, 16, 40), name, Constants.medium).createScreen(s));
+            start(s, Constants.medium);
         });
 
         buttonBig.setOnAction(event -> {
-            s.setScene(new BoardScene(new Game(30, 16, 99), name, Constants.expert).createScreen(s));
+            start(s, Constants.expert);
         });
 
 
@@ -58,5 +57,10 @@ public class TakeParameters extends Screens{
         Optional<String> answer = tid.showAndWait();
 
         return Integer.parseInt(answer.get());
-    } 
+    }
+
+    private void start(Stage s, String diff) {
+        ApiClient.GameView view = ApiClient.get().newGame(diff);
+        s.setScene(new BoardScene(view, name).createScreen(s));
+    }
 }

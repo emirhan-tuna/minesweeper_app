@@ -1,6 +1,6 @@
 package com.minesweeper_app.GUI;
-import com.minesweeper_app.DataBaseConnection.UserDao;
 
+import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -35,35 +35,24 @@ public class LoginScreen extends Screens{
         layout.setMaxWidth(250);
 
         loginButton.setOnAction(event -> {
-            if (!checkValidUsername(userField.getText())) {
-                System.out.print("Enter a non empty and less than 50 characters username!");
-                return;
-            } else if (!checkValidPass(passField.getText())) {
-                System.out.print("Enter a non empty password!");
-                return;
-            }
+            try {
+                ApiClient.get().login(userField.getText().trim(), passField.getText());
 
-            if (UserDao.login(userField.getText().trim(), passField.getText())) {
-                name = userField.getText();
+                name = userField.getText().trim();
                 stage.setScene(new MainMenu(name).createScreen(stage));
-            } else {
-                label.setText("Wrong username or password");
+            } catch (ApiClient.ApiError e) {
+                label.setText(e.getMessage());
             }
         });
 
         registerButton.setOnAction(event -> {
-            if (!checkValidUsername(userField.getText())) {
-                System.out.print("Enter a non empty and less than 50 characters username!");
-                return;
-            } else if (!checkValidPass(passField.getText())) {
-                System.out.print("Enter a non empty password!");
-                return;
-            }
-            if (UserDao.register(userField.getText().trim(), passField.getText())) {
-                name = userField.getText();
+            try {
+                ApiClient.get().register(userField.getText().trim(), passField.getText());
+
+                name = userField.getText().trim();
                 stage.setScene(new MainMenu(name).createScreen(stage));
-            } else {
-                label.setText("Username taken.");
+            } catch (ApiClient.ApiError e) {
+                label.setText(e.getMessage());
             }
         });
 

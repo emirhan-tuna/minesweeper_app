@@ -1,7 +1,6 @@
 package com.minesweeper_app.GUI;
 
-import com.minesweeper_app.DataBaseConnection.UserDao;
-
+import com.minesweeper_app.api.ApiClient;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -23,7 +22,7 @@ public class AllTimesScene extends Screens{
 
         diffBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             lView.getItems().clear();
-            for (int t : UserDao.getTimes(name, newVal)) {
+            for (int t : ApiClient.get().myTimes(newVal)) {
                 lView.getItems().add(t + "s");
             }
         });

@@ -1,4 +1,4 @@
-package com.kr4gen.MinesweeperApp.game;
+package com.kr4gen.MinesweeperApp.games;
 
 public class Mine_Cell extends Cell{
     public Mine_Cell(int x, int y) {

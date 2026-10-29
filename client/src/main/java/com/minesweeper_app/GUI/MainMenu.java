@@ -18,6 +18,7 @@ public class MainMenu extends Screens{
     public Scene createScreen(Stage stage) {
         BorderPane layout = new BorderPane();
         VBox butBox = new VBox(20);
+        butBox.setAlignment(Pos.CENTER);
         Label title = new Label("MINESWEEPER");
         title.setStyle("-fx-font-size: 36; -fx-font-weight: bold;");
         BorderPane.setAlignment(title, Pos.TOP_CENTER);
@@ -25,17 +26,23 @@ public class MainMenu extends Screens{
 
         Button startGame = new Button("Start game");
         startGame.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
-        Button times = new Button("See all the recorded times");
-        times.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
+        Button personalTimes = new Button("See all the recorded times");
+        personalTimes.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
+        Button topTimes = new Button("See the top times");
+        topTimes.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
 
         startGame.setOnAction(event -> {
             stage.setScene(new TakeParameters(name).createScreen(stage));
         });
-        times.setOnAction(event -> {
+        personalTimes.setOnAction(event -> {
             stage.setScene(new AllTimesScene(name).createScreen(stage));
         });
+        topTimes.setOnAction(event -> {
+            stage.setScene((new TopTimesScene(name).createScreen(stage)));
+        });
 
-        butBox.getChildren().addAll(startGame, times);
+        butBox.getChildren().addAll(startGame, personalTimes,topTimes);
+        layout.setTop(title);
         layout.setCenter(butBox);
 
         return new Scene(layout, Constants.width, Constants.height);

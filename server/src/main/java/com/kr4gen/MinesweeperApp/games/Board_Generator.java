@@ -1,4 +1,4 @@
-package com.kr4gen.MinesweeperApp.game;
+package com.kr4gen.MinesweeperApp.games;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,7 +30,7 @@ public class Board_Generator{
     public void createBoard(int startX, int startY) {
         setProtectedCells(startX, startY);
 
-        for (int i = 0; i < mineNumbers; i++) {
+        for (int i = 0; i < mineNumbers;) {
             int x = r.nextInt(0 , height);
             int y = r.nextInt(0, width);
             
@@ -39,6 +39,7 @@ public class Board_Generator{
 
                 board[x][y] = newMine;
                 mineList.add(newMine);
+                i++;
             }
         }
 

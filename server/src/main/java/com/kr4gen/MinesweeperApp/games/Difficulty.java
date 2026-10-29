@@ -1,4 +1,4 @@
-package com.kr4gen.MinesweeperApp.game;
+package com.kr4gen.MinesweeperApp.games;
 
 public enum Difficulty {
     BEGINNER(9,9,10),

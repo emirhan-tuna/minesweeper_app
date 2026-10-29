@@ -11,6 +11,11 @@ public class Game {
         this.state = GameState.NOT_ON;
     }
 
+    public Game(int width, int height, int mine, Long seed) {
+        gen = new Board_Generator(height, width, mine, seed);
+        this.state = GameState.NOT_ON;
+    }
+
     public int getWidth() {
         return gen.width;
     }
@@ -69,6 +74,10 @@ public class Game {
             gen.createBoard(x, y);
             reveal(x, y);
         }
+    }
+
+    public void startSetGame() {
+        gen.createSetBoard();
     }
 
     public int getMinesAround(int x, int y) {

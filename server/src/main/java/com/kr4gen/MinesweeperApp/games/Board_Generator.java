@@ -1,5 +1,6 @@
 package com.kr4gen.MinesweeperApp.games;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Board_Generator{
@@ -11,6 +12,8 @@ public class Board_Generator{
     int remainingMines;
     boolean isRevealed;
     Random r = new Random();
+    private int setStartRow;
+    private int setStartCol;
 
     public Board_Generator(int height, int width, int mine) {
         this.height = height;
@@ -25,6 +28,42 @@ public class Board_Generator{
         remainingMines = mine;
         isRevealed = false;
         mineList = new ArrayList<>();
+    }
+
+    public Board_Generator(int height, int width, int mine, Long seed) {
+        this.height = height;
+        this.width = width;
+        board = new Cell[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                board[i][j] = new Empty_Cell(i, j);
+            }
+        }
+        mineNumbers = mine;
+        remainingMines = mine;
+        isRevealed = false;
+        mineList = new ArrayList<>();
+        r.setSeed(seed);
+    }
+
+    public void createSetBoard() {
+        int row = height / 2;
+        int col = width / 2;
+
+        if (r.nextBoolean()) {
+            row = (int) Math.ceil(r.nextDouble(-height / 10.0, height /10.0)) + row;
+        } else {
+            row = (int) Math.floor(r.nextDouble(-height / 10.0, height / 10.0)) + row;
+        }
+        if (r.nextBoolean()) {
+            col = (int) Math.ceil(r.nextDouble(-width / 10.0, width / 10.0)) + col;
+        } else {
+            col = (int) Math.floor(r.nextDouble(-width / 10.0, width / 10.0)) + col;
+        }
+
+        this.setStartCol = col;
+        this.setStartRow = row;
+        createBoard(row, col);
     }
 
     public void createBoard(int startX, int startY) {
@@ -78,4 +117,7 @@ public class Board_Generator{
 
         board[x][y].setMinesAround(mines);
     }
+
+    public int getSetStartRow() {return setStartRow;}
+    public int getSetStartCol() {return setStartCol;}
 }

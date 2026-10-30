@@ -3,6 +3,7 @@ package com.kr4gen.MinesweeperApp.matches;
 import com.kr4gen.MinesweeperApp.api.ApiException;
 import com.kr4gen.MinesweeperApp.games.Difficulty;
 import com.kr4gen.MinesweeperApp.games.Game;
+import com.kr4gen.MinesweeperApp.games.Game.GameState;
 import com.kr4gen.MinesweeperApp.user.User;
 import org.springframework.http.HttpStatus;
 
@@ -15,7 +16,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchSession {
-    public enum State {NOT_ON, FINISHED, ONGOING}
     private final static Duration TIMEOUT = Duration.ofSeconds(30);
 
     private final String id = UUID.randomUUID().toString();
@@ -23,7 +23,7 @@ public class MatchSession {
     private final User userOne;
     private final User userTwo;
     private final Map<String, Game> gameMap = new ConcurrentHashMap<>();
-    private State gameState = State.NOT_ON;
+    private GameState gameState = GameState.NOT_ON;
     private User winner;
     private Instant playerOneLastPlayed;
     private Instant playerTwoLastPlayed;
@@ -55,8 +55,8 @@ public class MatchSession {
         if (start == null) {
             this.start = now;
         }
-        if (this.gameState == State.NOT_ON) {
-            this.gameState = State.ONGOING;
+        if (this.gameState == GameState.NOT_ON) {
+            this.gameState = GameState.ONGOING;
         }
     }
 
@@ -118,11 +118,36 @@ public class MatchSession {
     }
 
     public void finish(Instant now, User winner) {
-        if (gameState == State.FINISHED) {
-            return;
+        if (!isFinished()) {
+            setEnd(now);
+            this.winner = winner;
         }
-        gameState = State.FINISHED;
-        setEnd(now);
-        this.winner = winner;
     }
+
+    public GameState getGameState(User user) {
+        if (isPlayer(user.id())) {
+            if (isFinished()) {
+                if (winner != null && winner.id().equals(user.id())) {
+                    return GameState.WIN;
+                } else {
+                    return GameState.LOSE;
+                }
+            }
+            return GameState.ONGOING;
+        }
+        throw new ApiException(HttpStatus.FORBIDDEN, "It is not a player in the match");
+
+    }
+
+    public boolean isFinished() {
+        return end != null;
+    }
+
+    public boolean hasStarted() {
+        return start != null;
+    }
+
+    public String getID() {return this.id;}
+    public Difficulty getDiff() {return this.diff;}
+    public Instant getEnd() {return this.end;}
 }

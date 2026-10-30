@@ -16,3 +16,13 @@ CREATE TABLE IF NOT EXISTS user_times (
         REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_times_user_diff (user_id, difficulty, time_sec)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS match_stats(
+    user_id        CHAR(36)     NOT NULL,
+    difficulty      VARCHAR(20) NOT NULL,
+    wins           INT          NOT NULL DEFAULT 0,
+    losses         INT          NOT NULL DEFAULT 0,
+    PRIMARY KEY (user_id, difficulty),
+    CONSTRAINT fk_matches_user FOREIGN KEY (user_id)
+        REFERENCES  users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

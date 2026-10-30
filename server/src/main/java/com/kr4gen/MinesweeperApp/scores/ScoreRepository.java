@@ -16,7 +16,7 @@ public class ScoreRepository {
         this.client = client;
     }
 
-    public void save(String userID, Difficulty diff, int timeSec) {
+    public void saveTime(String userID, Difficulty diff, int timeSec) {
         client.sql("INSERT INTO user_times (user_id, difficulty, time_sec) VALUES (:user_id, :difficulty, :timeSec)")
                 .param("user_id", userID)
                 .param("difficulty", diff.name())

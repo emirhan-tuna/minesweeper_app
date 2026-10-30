@@ -77,7 +77,7 @@ public class GameService {
             if (game.isOver() && session.end() == null) {
                 session.setEnd(Instant.now());
                 if (game.getStatus() == Game.GameState.WIN) {
-                    repository.save(user.id(), session.diff(), session.gameDuration(Instant.now()));
+                    repository.saveTime(user.id(), session.diff(), session.gameDuration(Instant.now()));
                 }
             }
 

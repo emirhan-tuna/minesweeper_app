@@ -78,6 +78,8 @@ public class Game {
 
     public void startSetGame() {
         gen.createSetBoard();
+        state = GameState.ONGOING;
+        reveal(gen.getSetStartRow(), gen.getSetStartCol());
     }
 
     public int getMinesAround(int x, int y) {

@@ -1,12 +1,11 @@
 package com.kr4gen.MinesweeperApp.matches;
 
 import com.kr4gen.MinesweeperApp.auth.AuthInterceptor;
-import com.kr4gen.MinesweeperApp.games.GameDtos;
 import com.kr4gen.MinesweeperApp.games.GameDtos.gameRequest;
-import com.kr4gen.MinesweeperApp.games.GameDtos.gameView;
+import com.kr4gen.MinesweeperApp.games.GameDtos.moveRequest;
+import com.kr4gen.MinesweeperApp.matches.MatchDtos.MatchView;
 import com.kr4gen.MinesweeperApp.user.User;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,5 +30,25 @@ public class MatchController {
     @DeleteMapping("/queue")
     public MatchDtos.JoinResponse cancel(@RequestAttribute(AuthInterceptor.USER) User user) {
         return service.cancel(user);
+    }
+
+    @GetMapping("/{id}")
+    public MatchView getState(@RequestAttribute(AuthInterceptor.USER) User user, @PathVariable String id) {
+        return service.get(user, id);
+    }
+
+    @PostMapping("/{id}/reveal")
+    public MatchView reveal(@RequestAttribute(AuthInterceptor.USER) User user, @PathVariable String id, @Valid@RequestBody moveRequest request) {
+        return service.reveal(user, id, request.row(), request.col());
+    }
+
+    @PostMapping("/{id}/flag")
+    public MatchView flag(@RequestAttribute(AuthInterceptor.USER) User user, @PathVariable String id, @Valid@RequestBody moveRequest request) {
+        return service.flag(user, id, request.row(), request.col());
+    }
+
+    @PostMapping("/{id}/forfeit")
+    public MatchView forfeit(@RequestAttribute(AuthInterceptor.USER) User user, @PathVariable String id) {
+        return service.forfeit(user, id);
     }
 }

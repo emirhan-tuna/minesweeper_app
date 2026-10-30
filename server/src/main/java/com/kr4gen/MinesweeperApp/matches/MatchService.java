@@ -5,16 +5,13 @@ import com.kr4gen.MinesweeperApp.games.Difficulty;
 import com.kr4gen.MinesweeperApp.games.Game;
 import com.kr4gen.MinesweeperApp.matches.MatchDtos.JoinResponse;
 import com.kr4gen.MinesweeperApp.matches.MatchDtos.MatchView;
-import com.kr4gen.MinesweeperApp.scores.ScoreRepository;
 import com.kr4gen.MinesweeperApp.user.User;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -66,9 +63,8 @@ public class MatchService {
     }
 
     public JoinResponse queueStatus(User user) {
-        MatchSession curMatch = matches.get(user.id());
-
         synchronized (queueLock) {
+            MatchSession curMatch = matches.get(user.id());
             if (curMatch != null) {
                 if (!curMatch.isFinished()) {
                     return new JoinResponse(MatchDtos.JoinStatus.MATCHED, curMatch.getID());

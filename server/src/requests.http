@@ -1,6 +1,9 @@
 @base = http://localhost:8080
-@token = aAGTKMQqFG7v3WPNpiaOaFDK0_mI9kvORgLkp_Zl5n4
+@token = tgR4iRgAM1pHof5TdiqQY9rt5tTqwRAA-AAEYPPWiF0
 @game = 708b0439-9a70-4e4d-939e-106ade2e3b90
+@tokenTwo = fGalKrFOhxTb5untURTFljsEO77GMLI-LQlvBmVL2do
+@matchID = 4ff9c81c-d980-44f9-9b4e-3cbb16191fab
+
 ### Register (copy "token" from the response into @token)
 POST {{base}}/api/auth/register
 Content-Type: application/json
@@ -12,6 +15,12 @@ POST {{base}}/api/auth/login
 Content-Type: application/json
 
 {"username": "emirhan", "password": "secret"}
+
+### Login2
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{"username": "test1", "password": "1"}
 
 ### New game (copy "id" into @game)
 POST {{base}}/api/games
@@ -51,3 +60,54 @@ Authorization: Bearer {{token}}
 "rows": ["#########", "##11121##", "##10001##", "##10001##", "##10001##",
 "##21112##", "#########", "#########", "#########"]
 }
+
+### JoinQueue
+POST {{base}}/api/matches/queue
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"diff":  "EXPERT"}
+
+### JoinQueue2
+POST {{base}}/api/matches/queue
+Authorization: Bearer {{tokenTwo}}
+Content-Type: application/json
+
+{
+  "diff": "EXPERT"
+}
+
+### QueueStatus
+GET {{base}}/api/matches/queue
+Authorization: Bearer {{token}}
+
+### CancelMatchmaking
+DELETE {{base}}/api/matches/queue
+Authorization: Bearer {{tokenTwo}}
+
+### getStateFirst
+GET {{base}}/api/matches/{{matchID}}
+Authorization: Bearer {{token}}
+
+### getStateSecond
+GET {{base}}/api/matches/{{matchID}}
+Authorization: Bearer {{tokenTwo}}
+
+### reveal
+POST {{base}}/api/matches/{{matchID}}/reveal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"row": 2, "col": 2}
+
+### flag
+POST {{base}}/api/matches/{{matchID}}/flag
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"row": 0, "col": 1}
+
+### forfeit
+POST {{base}}/api/matches/{{matchID}}/forfeit
+Authorization: Bearer {{token}}
+

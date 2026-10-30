@@ -23,6 +23,11 @@ public class ApiClient {
 
     public record Entry(String username, int timeSec) {};
     public record AuthResponse(String token, String username) {}
+    public record MatchView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows, String oppUsername) {
+        public boolean isOVer() {return state.equals("WIN") || state.equals("LOSE"); }
+    }
+    public record JoinResponse (String status, String matchID) {}
+
     public record GameView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows)
     {
         public boolean isOver() {
@@ -63,6 +68,34 @@ public class ApiClient {
 
     public GameView newGame(String diff) {
         return send("POST", "api/games", Map.of("diff", diff), new TypeReference<>() {});
+    }
+
+    public JoinResponse joinQueue(String diff) {
+        return send("POST", "api/matches/queue", Map.of("diff", diff), new TypeReference<>() {});
+    }
+
+    public JoinResponse getQueueState() {
+        return send("GET", "api/matches/queue", null, new TypeReference<>() {});
+    }
+
+    public JoinResponse cancel() {
+        return send("DELETE", "api/matches/queue", null, new TypeReference<>() {});
+    }
+
+    public MatchView getMatchState(String gameID) {
+        return send("GET", "api/matches/" + gameID, null, new TypeReference<> () {});
+    }
+
+    public MatchView revealMatch(String gameID, int row, int col) {
+        return send("POST", "api/matches/" + gameID + "/reveal", Map.of("row", row, "col", col), new TypeReference<>() {});
+    }
+
+    public MatchView flagMatch(String gameID, int row, int col) {
+        return send("POST", "api/matches/" + gameID + "/flag", Map.of("row", row, "col", col), new TypeReference<>() {});
+    }
+
+    public MatchView forfeit(String gameID) {
+        return send("POST", "api/matches/"+ gameID + "/forfeit", null, new TypeReference<>() {});
     }
 
     public GameView reveal(String gameID, int row, int col) {

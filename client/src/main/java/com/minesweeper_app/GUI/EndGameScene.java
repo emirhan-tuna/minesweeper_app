@@ -19,9 +19,9 @@ class EndGameScene extends Screens{
     private Image mine = new Image(getClass().getResourceAsStream("/images/mine.png"));
     private Button[][] buttons;
     private int result;
-    private ApiClient.GameView view;
+    private BoardView view;
 
-    public EndGameScene(String name, int result, ApiClient.GameView resultPane) {
+    public EndGameScene(String name, int result, BoardView resultPane) {
         super(name);
         this.result = result;
         this.view = resultPane;

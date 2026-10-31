@@ -1,6 +1,5 @@
 package com.minesweeper_app.GUI;
 
-import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,23 +14,26 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class BoardScene extends Screens{
+public abstract class AbstractBoardScene extends Screens{
+
     private static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-text-fill: ";
     private static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px; -fx-font-weight: bold;";
-    private ApiClient.GameView view;
+
+    protected BoardView view;
+    protected boolean ended = false;
     private Button[][] buttons;
-    private Label mineNumber = new Label();
-    private Label error = new Label();
+    protected Label mineNumber = new Label();
+    protected Label error = new Label();
     private Image flag = new Image(getClass().getResourceAsStream("/images/flag.png"));
     private Image mine = new Image(getClass().getResourceAsStream("/images/mine.png"));
 
-    public BoardScene(ApiClient.GameView game, String aName) {
+    public AbstractBoardScene(BoardView view, String aName) {
         super(aName);
-        this.view = game;
+        this.view = view;
         buttons = new Button[view.height()][view.width()];
     }
 
-    @Override 
+    @Override
     public Scene createScreen(Stage stage) {
         BorderPane layout = new BorderPane();
         this.s = stage;
@@ -39,14 +41,11 @@ public class BoardScene extends Screens{
         GridPane pane = showGrid();
         Button back = new Button("Back to menu");
         mineNumber = new Label(Integer.toString(view.minesLeft()));
-        Label nameLabel = new Label(name);
-        HBox top = new HBox(20);
-        top.setStyle("-fx-background-color: #333333; -fx-padding: 10;");
-        top.setAlignment(Pos.TOP_CENTER);
-        top.getChildren().addAll(mineNumber, nameLabel, error);
+        HBox top = setTopBar();
+
 
         back.setOnAction(event -> {
-            stage.setScene(new MainMenu(name).createScreen(stage));
+            goBack(stage);
         });
 
         layout.setTop(top);
@@ -54,10 +53,11 @@ public class BoardScene extends Screens{
         layout.setCenter(pane);
 
         refresh();
+        startPolling();
         return new Scene(layout, Constants.width, Constants.height);
-    } 
+    }
 
-    public GridPane showGrid(){
+    protected GridPane showGrid(){
         GridPane resultPane = new GridPane();
         resultPane.setAlignment(Pos.CENTER);
 
@@ -78,7 +78,7 @@ public class BoardScene extends Screens{
                         play(true, curRow, curCol);
                     } else if (e.getButton() == MouseButton.SECONDARY) {
                         play(false, curRow, curCol);
-                    } 
+                    }
                 });
 
                 buttons[i][j] = tile;
@@ -89,26 +89,7 @@ public class BoardScene extends Screens{
         return resultPane;
     }
 
-    private void play(Boolean left, int row, int col) {
-        try {
-            if (left) {
-                view = ApiClient.get().reveal(view.id(), row, col);
-            } else {
-                view = ApiClient.get().flag(view.id(), row, col);
-            }
-        } catch (ApiClient.ApiError e) {
-            error.setText(e.getMessage());
-            return;
-        }
-
-        refresh();
-        if (view.isOver()) {
-            int result = view.state().equals("WIN") ? 0 : 1;
-            s.setScene(new EndGameScene(name, result, view).createScreen(s));
-        }
-    }
-
-    public void refresh() {
+    protected void refresh() {
         for (int i = 0; i < view.height(); i++) {
             for (int j = 0; j < view.width(); j++) {
                 char c = view.rows().get(i).charAt(j);
@@ -143,4 +124,37 @@ public class BoardScene extends Screens{
         mineNumber.setGraphicTextGap(10);
         mineNumber.setContentDisplay(ContentDisplay.RIGHT);
     }
+
+    protected void goBack(Stage s) {
+        s.setScene(new MainMenu(name).createScreen(s));
+    }
+
+    protected HBox setTopBar() {
+        HBox top = new HBox(20);
+        top.setStyle("-fx-background-color: #333333; -fx-padding: 10;");
+        top.setAlignment(Pos.TOP_CENTER);
+        Label nameLabel = new Label(name);
+        top.getChildren().addAll(mineNumber, nameLabel, error);
+
+        return top;
+    }
+
+    protected void startPolling() {}
+
+    abstract void play(boolean left, int row, int col);
+
+    protected void end() {
+        onGameEnded();
+        if (ended) {
+            return;
+        }
+        this.ended = true;
+        if (view.state().equals("WIN")) {
+            s.setScene(new EndGameScene(name, 0, view).createScreen(s));
+        } else {
+            s.setScene(new EndGameScene(name, 1, view).createScreen(s));
+        }
+    }
+
+    protected void onGameEnded() {}
 }

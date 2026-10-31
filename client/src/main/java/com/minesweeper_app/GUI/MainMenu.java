@@ -26,13 +26,18 @@ public class MainMenu extends Screens{
 
         Button startGame = new Button("Start game");
         startGame.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
+        Button findMatch = new Button("Find an online match");
+        findMatch.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
         Button personalTimes = new Button("See all the recorded times");
         personalTimes.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
         Button topTimes = new Button("See the top times");
         topTimes.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
 
         startGame.setOnAction(event -> {
-            stage.setScene(new TakeParameters(name).createScreen(stage));
+            stage.setScene(new TakeParameters(name, true).createScreen(stage));
+        });
+        findMatch.setOnAction(event -> {
+
         });
         personalTimes.setOnAction(event -> {
             stage.setScene(new AllTimesScene(name).createScreen(stage));

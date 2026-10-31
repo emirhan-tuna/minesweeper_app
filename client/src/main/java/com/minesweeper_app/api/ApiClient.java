@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.minesweeper_app.GUI.BoardView;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,15 +22,14 @@ public class ApiClient {
         return INSTANCE;
     }
 
-    public record Entry(String username, int timeSec) {};
+    public record Entry(String username, int timeSec) {}
     public record AuthResponse(String token, String username) {}
-    public record MatchView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows, String oppUsername) {
-        public boolean isOVer() {return state.equals("WIN") || state.equals("LOSE"); }
+    public record MatchView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows, String oppUsername) implements BoardView {
+        public boolean isOver() {return state.equals("WIN") || state.equals("LOSE"); }
     }
     public record JoinResponse (String status, String matchID) {}
 
-    public record GameView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows)
-    {
+    public record GameView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows) implements BoardView{
         public boolean isOver() {
             return state.equals("WIN") || state.equals("LOSE");
         }

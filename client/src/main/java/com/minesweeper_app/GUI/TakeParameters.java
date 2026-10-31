@@ -28,18 +28,24 @@ public class TakeParameters extends Screens{
         buttonSmall.setOnAction(event -> {
             if (isGame) {
                 startGame(s, Constants.beginner);
+            } else {
+                startMatch(s, Constants.beginner);
             }
         });
 
         buttonMed.setOnAction(event -> {
             if (isGame) {
                 startGame(s, Constants.medium);
+            } else {
+                startMatch(s, Constants.medium);
             }
         });
 
         buttonBig.setOnAction(event -> {
             if (isGame) {
                 startGame(s, Constants.expert);
+            } else {
+                startMatch(s, Constants.expert);
             }
         });
 

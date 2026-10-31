@@ -37,7 +37,7 @@ public class MainMenu extends Screens{
             stage.setScene(new TakeParameters(name, true).createScreen(stage));
         });
         findMatch.setOnAction(event -> {
-
+            stage.setScene(new TakeParameters(name, false).createScreen(stage));
         });
         personalTimes.setOnAction(event -> {
             stage.setScene(new AllTimesScene(name).createScreen(stage));
@@ -46,7 +46,7 @@ public class MainMenu extends Screens{
             stage.setScene((new TopTimesScene(name).createScreen(stage)));
         });
 
-        butBox.getChildren().addAll(startGame, personalTimes,topTimes);
+        butBox.getChildren().addAll(startGame, findMatch, personalTimes,topTimes);
         layout.setTop(title);
         layout.setCenter(butBox);
 

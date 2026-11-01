@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ApiClient {
 
@@ -23,6 +24,7 @@ public class ApiClient {
     }
 
     public record Entry(String username, int timeSec) {}
+    public record Stats(int wins, int losses) {}
     public record AuthResponse(String token, String username) {}
     public record MatchView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows, String oppUsername) implements BoardView {
         public boolean isOver() {return state.equals("WIN") || state.equals("LOSE"); }
@@ -112,6 +114,10 @@ public class ApiClient {
 
     public List<Entry> topTimes(String diff) {
         return send("GET", "api/scores/top?diff=" + diff, Map.of("diff", diff), new TypeReference<>() {});
+    }
+
+    public Stats getResults(String diff) {
+        return send("GET", "api/matches/stats?diff=" + diff, null, new TypeReference<>() {});
     }
 
     private <T> T send(String method, String path, Object body, TypeReference<T> type) {

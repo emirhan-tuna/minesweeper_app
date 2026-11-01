@@ -4,6 +4,9 @@ import com.kr4gen.MinesweeperApp.games.Difficulty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class MatchRepository {
     private final JdbcClient client;
@@ -23,5 +26,19 @@ public class MatchRepository {
                 .param("loser", loserID)
                 .param("difficulty", diff.name())
                 .update();
+    }
+
+    public MatchDtos.Stats getResults(String userID, Difficulty diff) {
+        return client.sql("""
+                SELECT wins, losses FROM match_stats
+                WHERE user_id =  :user_id AND difficulty = :diff""")
+                .param("user_id", userID)
+                .param("diff", diff.name())
+                .query((rs, n) -> new MatchDtos.Stats(
+                        rs.getInt("wins"),
+                        rs.getInt("losses")
+                ))
+                .optional()
+                .orElse(new MatchDtos.Stats(0, 0));
     }
 }

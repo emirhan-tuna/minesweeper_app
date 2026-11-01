@@ -7,11 +7,14 @@ import com.kr4gen.MinesweeperApp.matches.MatchDtos.JoinResponse;
 import com.kr4gen.MinesweeperApp.matches.MatchDtos.MatchView;
 import com.kr4gen.MinesweeperApp.user.User;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -21,6 +24,7 @@ public class MatchService {
     private final Object queueLock = new Object();
 
     private ConcurrentHashMap<Difficulty, User> queue = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Instant> lastActive = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, MatchSession> matches = new ConcurrentHashMap<>();
 
     public MatchService(MatchRepository repository) {
@@ -28,6 +32,7 @@ public class MatchService {
     }
 
     public JoinResponse join(User user, Difficulty diff) {
+        Instant now = Instant.now();
         synchronized (queueLock) {
             MatchSession session = matches.get(user.id());
             if (session != null) {
@@ -41,6 +46,7 @@ public class MatchService {
             for (var entry : queue.entrySet()) {
                 if (entry.getValue().id().equals(user.id())) {
                     if (entry.getKey() == diff) {
+                        lastActive.put(user.id(), now);
                         return new JoinResponse(MatchDtos.JoinStatus.WAITING, null);
                     } else {
                         throw new ApiException(HttpStatus.CONFLICT, "Already in other difficulty queue");
@@ -50,6 +56,7 @@ public class MatchService {
 
             User waitingPlayer = queue.get(diff);
             if (waitingPlayer == null) {
+                lastActive.put(user.id(), now);
                 queue.put(diff, user);
                 return new JoinResponse(MatchDtos.JoinStatus.WAITING, null);
             } else {
@@ -57,22 +64,26 @@ public class MatchService {
                 MatchSession newSession = new MatchSession(waitingPlayer, user, diff);
                 matches.put(waitingPlayer.id(), newSession);
                 matches.put(user.id(), newSession);
+                lastActive.remove(waitingPlayer.id());
                 return new JoinResponse(MatchDtos.JoinStatus.MATCHED, newSession.getID());
             }
         }
     }
 
     public JoinResponse queueStatus(User user) {
+        Instant now = Instant.now();
         synchronized (queueLock) {
             MatchSession curMatch = matches.get(user.id());
             if (curMatch != null) {
                 if (!curMatch.isFinished()) {
+                    lastActive.remove(user.id());
                     return new JoinResponse(MatchDtos.JoinStatus.MATCHED, curMatch.getID());
                 }
             }
 
             for (var entry : queue.entrySet()) {
                 if (entry.getValue().id().equals(user.id())) {
+                    lastActive.put(user.id(), now);
                     return new JoinResponse(MatchDtos.JoinStatus.WAITING, null);
                 }
             }
@@ -85,11 +96,13 @@ public class MatchService {
             MatchSession session = matches.get(user.id());
 
             if (session != null && !session.isFinished()) {
+                lastActive.remove(user.id());
                 return new JoinResponse(MatchDtos.JoinStatus.MATCHED, session.getID());
             } else {
                 for (var entry : queue.entrySet()) {
                     if (entry.getValue().id().equals(user.id())) {
                         queue.remove(entry.getKey());
+                        lastActive.remove(user.id());
                         break;
                     }
                 }
@@ -194,5 +207,42 @@ public class MatchService {
 
         return new MatchView(session.getID(), session.getDiff(), game.getWidth(), game.getHeight(), game.getMines(), session.getGameState(user),
                 session.gameDuration(now), rows, session.getOpponent(user.id()).username());
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void cleanUp() {
+        Instant now = Instant.now();
+        for (var entry : matches.entrySet()) {
+            MatchSession session = entry.getValue();
+            synchronized (session) {
+                if (!session.isFinished()) {
+                    Optional<User> inactive = session.inactive(now);
+
+                    if (inactive.isPresent()) {
+                        User opp = session.getOpponent(inactive.get().id());
+                        session.finish(now, opp);
+                        matchRepository.saveResult(opp.id(), inactive.get().id(), session.getDiff());
+                    }
+                }
+                if (session.isFinished()) {
+                    Instant end = session.getEnd();
+                    if (Duration.between(end, now).toSeconds() > Duration.ofSeconds(30).toSeconds()) {
+                        matches.remove(entry.getKey(), session);
+                    }
+                }
+            }
+        }
+
+        synchronized (queueLock) {
+            for (var entry : queue.entrySet()) {
+                User curUser = entry.getValue();
+                Difficulty curDiff = entry.getKey();
+                Instant lastSeen = lastActive.get(curUser.id());
+                if (Duration.between(lastSeen, now).toSeconds() > Duration.ofSeconds(30).toSeconds()) {
+                    queue.remove(curDiff, curUser);
+                    lastActive.remove(curUser.id());
+                }
+            }
+        }
     }
 }

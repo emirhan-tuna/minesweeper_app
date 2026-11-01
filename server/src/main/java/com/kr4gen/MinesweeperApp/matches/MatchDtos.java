@@ -16,6 +16,11 @@ public class MatchDtos {
             String matchID
     ) {}
 
+    public record Stats(
+            int wins,
+            int losses
+    ) {}
+
     public record MatchView (
             String id,
             Difficulty diff,

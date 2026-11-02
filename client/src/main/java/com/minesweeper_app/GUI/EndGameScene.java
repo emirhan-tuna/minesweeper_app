@@ -13,8 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 class EndGameScene extends Screens{
-    private static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-text-fill: ";
-    private static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px; -fx-font-weight: bold;";
+    private static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-padding: 0; -fx-text-fill: ";
+    private static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px; -fx-padding: 0; -fx-font-weight: bold;";
     private Image flag = new Image(getClass().getResourceAsStream("/images/flag.png"));
     private Image mine = new Image(getClass().getResourceAsStream("/images/mine.png"));
     private Button[][] buttons;

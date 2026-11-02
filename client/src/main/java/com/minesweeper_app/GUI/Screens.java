@@ -11,4 +11,5 @@ public abstract class Screens {
         this.name = name;
     }
     public abstract Scene createScreen(Stage s);
+
 }

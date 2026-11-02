@@ -32,6 +32,8 @@ public class MainMenu extends Screens{
         personalTimes.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
         Button topTimes = new Button("See the top times");
         topTimes.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
+        Button matchResults = new Button("See your match results");
+        matchResults.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
 
         startGame.setOnAction(event -> {
             stage.setScene(new TakeParameters(name, true).createScreen(stage));
@@ -43,10 +45,13 @@ public class MainMenu extends Screens{
             stage.setScene(new AllTimesScene(name).createScreen(stage));
         });
         topTimes.setOnAction(event -> {
-            stage.setScene((new TopTimesScene(name).createScreen(stage)));
+            stage.setScene(new TopTimesScene(name).createScreen(stage));
+        });
+        matchResults.setOnAction(event -> {
+            stage.setScene(new MatchInfoScene(name).createScreen(stage));
         });
 
-        butBox.getChildren().addAll(startGame, findMatch, personalTimes,topTimes);
+        butBox.getChildren().addAll(startGame, findMatch, personalTimes, topTimes, matchResults);
         layout.setTop(title);
         layout.setCenter(butBox);
 

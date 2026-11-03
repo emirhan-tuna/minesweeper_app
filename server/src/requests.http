@@ -1,8 +1,8 @@
 @base = http://localhost:8080
-@token = tgR4iRgAM1pHof5TdiqQY9rt5tTqwRAA-AAEYPPWiF0
-@game = 708b0439-9a70-4e4d-939e-106ade2e3b90
-@tokenTwo = fGalKrFOhxTb5untURTFljsEO77GMLI-LQlvBmVL2do
-@matchID = 4ff9c81c-d980-44f9-9b4e-3cbb16191fab
+@token =
+@game =
+@tokenTwo =
+@matchID =
 
 ### Register (copy "token" from the response into @token)
 POST {{base}}/api/auth/register

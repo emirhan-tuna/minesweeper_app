@@ -1,8 +1,10 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.board;
 
+import com.minesweeper_app.gui.Constants;
+import com.minesweeper_app.gui.Screens;
+import com.minesweeper_app.gui.menu.MainMenu;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -15,7 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public abstract class AbstractBoardScene<V extends BoardView> extends Screens{
+public abstract class AbstractBoardScene<V extends BoardView> extends Screens {
 
     private static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-padding: 0; -fx-text-fill: ";
     private static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px;-fx-padding: 0; -fx-font-weight: bold;";

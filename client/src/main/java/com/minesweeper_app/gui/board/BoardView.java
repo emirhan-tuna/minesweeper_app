@@ -1,4 +1,4 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.board;
 
 import java.util.List;
 

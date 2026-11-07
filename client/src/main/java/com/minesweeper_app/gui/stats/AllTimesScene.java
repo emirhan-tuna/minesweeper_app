@@ -1,15 +1,17 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.stats;
 
+import com.minesweeper_app.gui.Constants;
+import com.minesweeper_app.gui.Screens;
+import com.minesweeper_app.gui.menu.MainMenu;
 import com.minesweeper_app.api.ApiClient;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class AllTimesScene extends Screens{
+public class AllTimesScene extends Screens {
     public AllTimesScene(String aName) {
         super(aName);
     }

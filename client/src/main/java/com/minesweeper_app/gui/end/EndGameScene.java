@@ -1,18 +1,9 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.end;
 
 import com.minesweeper_app.api.ApiClient;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
-class EndGameScene extends AbstractEndScene{
+public class EndGameScene extends AbstractEndScene {
 
     public EndGameScene(String name, int result, ApiClient.GameView resultPane) {
         super(name, result, resultPane);

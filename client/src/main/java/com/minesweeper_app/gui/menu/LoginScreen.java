@@ -1,9 +1,10 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.menu;
 
+import com.minesweeper_app.gui.Constants;
+import com.minesweeper_app.gui.Screens;
 import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -12,7 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class LoginScreen extends Screens{
+public class LoginScreen extends Screens {
 
     public LoginScreen() {
         super("");

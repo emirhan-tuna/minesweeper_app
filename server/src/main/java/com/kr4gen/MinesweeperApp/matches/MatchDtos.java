@@ -30,6 +30,7 @@ public class MatchDtos {
             GameState state,
             int elapsedSec,
             List<String> rows,
-            String oppUsername
+            String oppUsername,
+            int timeLeftUntilStart
     ) {}
 }

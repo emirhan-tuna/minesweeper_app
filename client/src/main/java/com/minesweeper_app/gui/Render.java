@@ -1,7 +1,8 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui;
 
 import atlantafx.base.theme.PrimerDark;
 
+import com.minesweeper_app.gui.menu.LoginScreen;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Screen;

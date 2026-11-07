@@ -1,9 +1,9 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.end;
 
 import com.minesweeper_app.api.ApiClient;
 import javafx.scene.control.Label;
 
-public class EndMatchScene extends AbstractEndScene{
+public class EndMatchScene extends AbstractEndScene {
 
     private final ApiClient.MatchView matchView;
 

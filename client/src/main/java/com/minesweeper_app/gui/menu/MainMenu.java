@@ -1,16 +1,19 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.menu;
 
+import com.minesweeper_app.gui.*;
+import com.minesweeper_app.gui.stats.AllTimesScene;
+import com.minesweeper_app.gui.stats.MatchInfoScene;
+import com.minesweeper_app.gui.stats.TopTimesScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class MainMenu extends Screens{
+public class MainMenu extends Screens {
     public MainMenu(String aName) {
         super(aName);
     }

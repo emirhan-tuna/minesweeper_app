@@ -1,19 +1,7 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.board;
 
+import com.minesweeper_app.gui.end.EndGameScene;
 import com.minesweeper_app.api.ApiClient;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public class GameBoardScene extends AbstractBoardScene<ApiClient.GameView> {
 

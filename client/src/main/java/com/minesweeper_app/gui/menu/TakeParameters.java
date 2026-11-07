@@ -1,15 +1,18 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.menu;
 
+import com.minesweeper_app.gui.*;
+import com.minesweeper_app.gui.board.GameBoardScene;
+import com.minesweeper_app.gui.match.CountdownScene;
+import com.minesweeper_app.gui.match.WaitingScene;
 import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class TakeParameters extends Screens{
+public class TakeParameters extends Screens {
     public final boolean isGame;
     private Label error = new Label();
     public TakeParameters(String aName, boolean game) {
@@ -57,6 +60,9 @@ public class TakeParameters extends Screens{
         return pane;
     }
 
+    //Leftover code in case of creating custom boards.
+    //Not implemented
+
     /*public int takeInt(String message) {
         TextInputDialog tid= new TextInputDialog(message);
         tid.getEditor().setTextFormatter(new TextFormatter<>(change -> {
@@ -84,7 +90,7 @@ public class TakeParameters extends Screens{
                 switchTo(s, new WaitingScene(name));
             } else if (response.status().equals("MATCHED")){
                 ApiClient.MatchView view = ApiClient.get().getMatchState(response.matchID());
-                switchTo(s, new MatchBoardScene(view, name));
+                switchTo(s, new CountdownScene(name, view));
             }
         } catch (ApiClient.ApiError e) {
             error.setText(e.getMessage());

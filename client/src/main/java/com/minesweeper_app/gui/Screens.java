@@ -1,13 +1,11 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui;
 
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public abstract class Screens {
-    String name;
-    Stage s;
+    protected String name;
+    protected Stage s;
 
     public Screens(String name) {
         this.name = name;

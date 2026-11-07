@@ -1,5 +1,7 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.board;
 
+import com.minesweeper_app.gui.end.EndMatchScene;
+import com.minesweeper_app.gui.menu.MainMenu;
 import com.minesweeper_app.api.ApiClient;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

@@ -1,9 +1,12 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.end;
 
+import com.minesweeper_app.gui.Constants;
+import com.minesweeper_app.gui.Screens;
+import com.minesweeper_app.gui.board.BoardView;
+import com.minesweeper_app.gui.menu.MainMenu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -14,10 +17,10 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-import static com.minesweeper_app.GUI.Constants.HIDDEN;
-import static com.minesweeper_app.GUI.Constants.OPEN;
+import static com.minesweeper_app.gui.Constants.HIDDEN;
+import static com.minesweeper_app.gui.Constants.OPEN;
 
-public abstract class AbstractEndScene extends Screens{
+public abstract class AbstractEndScene extends Screens {
 
     private final Image flag = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/flag.png")));
     private final Image mine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mine.png")));

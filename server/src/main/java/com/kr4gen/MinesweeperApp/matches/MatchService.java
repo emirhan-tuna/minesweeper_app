@@ -168,6 +168,9 @@ public class MatchService {
                 throw  new ApiException(HttpStatus.CONFLICT, "Game is already over");
             }
 
+            if (session.getGameState(user, now) == Game.GameState.NOT_ON) {
+                return view(session, now, user);
+            }
             action.accept(game);
             session.setLastPlayed(now, user.id());
 
@@ -205,8 +208,10 @@ public class MatchService {
             rows.add(sb.toString());
         }
 
-        return new MatchView(session.getID(), session.getDiff(), game.getWidth(), game.getHeight(), game.getMines(), session.getGameState(user),
-                session.gameDuration(now), rows, session.getOpponent(user.id()).username());
+        int timeLeft = Math.max((int) Duration.between(now, session.getStart()).toMillis(), 0);
+
+        return new MatchView(session.getID(), session.getDiff(), game.getWidth(), game.getHeight(), game.getMines(), session.getGameState(user, now),
+                session.gameDuration(now), rows, session.getOpponent(user.id()).username(), timeLeft);
     }
 
     @Scheduled(fixedRate = 5000)

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.minesweeper_app.GUI.BoardView;
+import com.minesweeper_app.gui.board.BoardView;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +13,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class ApiClient {
 
@@ -26,7 +25,7 @@ public class ApiClient {
     public record Entry(String username, int timeSec) {}
     public record Stats(int wins, int losses) {}
     public record AuthResponse(String token, String username) {}
-    public record MatchView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows, String oppUsername) implements BoardView {
+    public record MatchView(String id, String diff, int width, int height, int minesLeft, String state, int elapsedSec, List<String> rows, String oppUsername, int timeLeftUntilStart) implements BoardView {
         public boolean isOver() {return state.equals("WIN") || state.equals("LOSE"); }
     }
     public record JoinResponse (String status, String matchID) {}

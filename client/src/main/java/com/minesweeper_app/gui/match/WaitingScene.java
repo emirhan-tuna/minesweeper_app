@@ -1,5 +1,8 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.match;
 
+import com.minesweeper_app.gui.Constants;
+import com.minesweeper_app.gui.Screens;
+import com.minesweeper_app.gui.menu.MainMenu;
 import com.minesweeper_app.api.ApiClient;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -7,7 +10,6 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -15,7 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class WaitingScene extends Screens{
+public class WaitingScene extends Screens {
     private boolean request;
     private boolean left = false;
     private Timeline timeline;
@@ -78,7 +80,7 @@ public class WaitingScene extends Screens{
                     ApiClient.MatchView view = ApiClient.get().getMatchState(response.matchID());
                     timeline.stop();
                     left = true;
-                    switchTo(s, new MatchBoardScene(view, name));
+                    switchTo(s, new CountdownScene(name, view));
                 } else if (response.status().equals("WAITING")) {
                     request = false;
                 } else {
@@ -107,7 +109,7 @@ public class WaitingScene extends Screens{
             ApiClient.JoinResponse response = ApiClient.get().cancel();
             if (response.status().equals("MATCHED")) {
                 left = true;
-                switchTo(s, new MatchBoardScene(ApiClient.get().getMatchState(response.matchID()), name));
+                switchTo(s, new CountdownScene(name, ApiClient.get().getMatchState(response.matchID())));
             } else {
                 left = true;
                 switchTo(s, new MainMenu(name));

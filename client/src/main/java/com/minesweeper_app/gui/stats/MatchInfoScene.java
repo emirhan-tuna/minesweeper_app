@@ -1,9 +1,11 @@
-package com.minesweeper_app.GUI;
+package com.minesweeper_app.gui.stats;
 
+import com.minesweeper_app.gui.Constants;
+import com.minesweeper_app.gui.Screens;
+import com.minesweeper_app.gui.menu.MainMenu;
 import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -11,7 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class MatchInfoScene extends Screens{
+public class MatchInfoScene extends Screens {
 
     private Label winNumber = new Label();
     private Label loseNumber = new Label();

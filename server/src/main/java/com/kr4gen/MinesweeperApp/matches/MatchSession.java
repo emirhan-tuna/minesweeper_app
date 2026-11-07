@@ -23,20 +23,18 @@ public class MatchSession {
     private final User userOne;
     private final User userTwo;
     private final Map<String, Game> gameMap = new ConcurrentHashMap<>();
-    private GameState gameState = GameState.NOT_ON;
     private User winner;
     private Instant playerOneLastPlayed;
     private Instant playerTwoLastPlayed;
     private Instant start;
     private Instant end;
-    private final Random r = new Random();
-    private final long seed;
 
     public MatchSession(User userOne, User userTwo, Difficulty diff) {
         this.diff = diff;
         this.userOne = userOne;
         this.userTwo = userTwo;
-        this.seed = r.nextLong();
+        Random r = new Random();
+        long seed = r.nextLong();
         Game tempGameOne = new Game(diff.width, diff.height, diff.mines, seed);
         tempGameOne.startSetGame();
         Game tempGameTwo = new Game(diff.width, diff.height, diff.mines, seed);
@@ -53,10 +51,7 @@ public class MatchSession {
 
     public void setStart(Instant now) {
         if (start == null) {
-            this.start = now;
-        }
-        if (this.gameState == GameState.NOT_ON) {
-            this.gameState = GameState.ONGOING;
+            this.start = now.plus(Duration.ofSeconds(3));
         }
     }
 
@@ -74,7 +69,7 @@ public class MatchSession {
         if (end == null) {
             return (int) Duration.between(start, now).toSeconds();
         }
-        return (int) Duration.between(start, end).toSeconds();
+        return Math.max((int) Duration.between(start, end).toSeconds(), 0);
     }
 
     public User getOpponent(String id) {
@@ -124,7 +119,7 @@ public class MatchSession {
         }
     }
 
-    public GameState getGameState(User user) {
+    public GameState getGameState(User user, Instant now) {
         if (isPlayer(user.id())) {
             if (isFinished()) {
                 if (winner != null && winner.id().equals(user.id())) {
@@ -132,6 +127,9 @@ public class MatchSession {
                 } else {
                     return GameState.LOSE;
                 }
+            }
+            if (start.isAfter(now)) {
+                return GameState.NOT_ON;
             }
             return GameState.ONGOING;
         }
@@ -143,11 +141,8 @@ public class MatchSession {
         return end != null;
     }
 
-    public boolean hasStarted() {
-        return start != null;
-    }
-
     public String getID() {return this.id;}
     public Difficulty getDiff() {return this.diff;}
     public Instant getEnd() {return this.end;}
+    public Instant getStart() {return this.start;}
 }

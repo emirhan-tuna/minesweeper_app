@@ -1,13 +1,20 @@
 package com.minesweeper_app.GUI;
 
 public class Constants {
-    static final int height = 800;
-    static final int width = 1000;
+    static double height;
+    static double width;
     static final String beginner = "BEGINNER";
     static final String medium = "MEDIUM";
     static final String expert = "EXPERT";
     static final double buttonWidth = 220;
     static final double buttonHeight = 45;
+    static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-padding: 0; -fx-text-fill: ";
+    static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px; -fx-padding: 0; -fx-font-weight: bold;";
+
+    public static void setSizes(double width, double height) {
+        Constants.height = height;
+        Constants.width = width;
+    }
 
     public static String getColor(int num) {
         switch (num) {

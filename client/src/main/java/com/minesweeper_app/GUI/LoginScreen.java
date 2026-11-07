@@ -2,11 +2,13 @@ package com.minesweeper_app.GUI;
 
 import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,29 +19,38 @@ public class LoginScreen extends Screens{
     }
 
     @Override 
-    public Scene createScreen(Stage stage) {
-        VBox layout = new VBox();
+    public Parent createRoot(Stage stage) {
+        StackPane root = new StackPane();
+        VBox layout = new VBox(40);
+        VBox fieldBox = new VBox(20);
+        VBox buttonBox = new VBox(20);
         Label label = new Label();
         TextField userField = new TextField();
         userField.setPromptText("Username");
+        userField.setPrefSize(200, 20);
         PasswordField passField = new PasswordField();
+        passField.setPrefSize(200, 20);
         passField.setPromptText("Password");
+        fieldBox.getChildren().addAll(userField, passField);
 
         Button loginButton = new Button("Login");
         loginButton.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
         Button registerButton = new Button("Register");
         registerButton.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
-        layout.getChildren().addAll(userField, passField, loginButton, registerButton, label);
-        layout.setAlignment(Pos.CENTER);
-        layout.setSpacing(10);
-        layout.setMaxWidth(250);
+        buttonBox.getChildren().addAll(loginButton, registerButton);
+        fieldBox.setAlignment(Pos.CENTER);
+        buttonBox.setAlignment(Pos.CENTER);
+        fieldBox.setMaxWidth(550);
+        buttonBox.setMaxWidth(550);
+
+        layout.getChildren().addAll(fieldBox, buttonBox, label);
 
         loginButton.setOnAction(event -> {
             try {
                 ApiClient.get().login(userField.getText().trim(), passField.getText());
 
                 name = userField.getText().trim();
-                stage.setScene(new MainMenu(name).createScreen(stage));
+                switchTo(s, new MainMenu(name));
             } catch (ApiClient.ApiError e) {
                 label.setText(e.getMessage());
             }
@@ -48,15 +59,18 @@ public class LoginScreen extends Screens{
         registerButton.setOnAction(event -> {
             try {
                 ApiClient.get().register(userField.getText().trim(), passField.getText());
-
                 name = userField.getText().trim();
-                stage.setScene(new MainMenu(name).createScreen(stage));
+                switchTo(s, new MainMenu(name));
             } catch (ApiClient.ApiError e) {
                 label.setText(e.getMessage());
             }
         });
 
-        return new Scene(layout, Constants.width, Constants.height);
+        layout.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(layout);
+        root.setAlignment(Pos.CENTER);
+
+        return root;
     }
 
     public boolean checkValidUsername(String username) {

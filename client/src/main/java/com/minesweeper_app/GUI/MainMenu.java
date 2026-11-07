@@ -2,6 +2,7 @@ package com.minesweeper_app.GUI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,7 +16,7 @@ public class MainMenu extends Screens{
     }
 
     @Override 
-    public Scene createScreen(Stage stage) {
+    public Parent createRoot(Stage stage) {
         BorderPane layout = new BorderPane();
         VBox butBox = new VBox(20);
         butBox.setAlignment(Pos.CENTER);
@@ -36,26 +37,26 @@ public class MainMenu extends Screens{
         matchResults.setPrefSize(Constants.buttonWidth, Constants.buttonHeight);
 
         startGame.setOnAction(event -> {
-            stage.setScene(new TakeParameters(name, true).createScreen(stage));
+            switchTo(stage, new TakeParameters(name, true));
         });
         findMatch.setOnAction(event -> {
-            stage.setScene(new TakeParameters(name, false).createScreen(stage));
+            switchTo(stage, new TakeParameters(name, false));
         });
         personalTimes.setOnAction(event -> {
-            stage.setScene(new AllTimesScene(name).createScreen(stage));
+            switchTo(s, new AllTimesScene(name));
         });
         topTimes.setOnAction(event -> {
-            stage.setScene(new TopTimesScene(name).createScreen(stage));
+            switchTo(s, new TopTimesScene(name));
         });
         matchResults.setOnAction(event -> {
-            stage.setScene(new MatchInfoScene(name).createScreen(stage));
+            switchTo(s, new MatchInfoScene(name));
         });
 
         butBox.getChildren().addAll(startGame, findMatch, personalTimes, topTimes, matchResults);
         layout.setTop(title);
         layout.setCenter(butBox);
 
-        return new Scene(layout, Constants.width, Constants.height);
+        return layout;
     } 
 }
 

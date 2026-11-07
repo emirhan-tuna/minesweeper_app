@@ -4,6 +4,7 @@ import com.minesweeper_app.api.ApiClient;
 import com.minesweeper_app.api.ApiClient.Entry;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -14,7 +15,7 @@ public class TopTimesScene extends Screens{
     public TopTimesScene(String aName) {super(aName);}
 
     @Override
-    public Scene createScreen(Stage s) {
+    public Parent createRoot(Stage s) {
         ChoiceBox<String> diffBox = new ChoiceBox<>();
         diffBox.getItems().addAll(Constants.beginner, Constants.medium, Constants.expert);
 
@@ -48,7 +49,7 @@ public class TopTimesScene extends Screens{
         Button backButton = new Button("Go back to main menu");
 
         backButton.setOnAction(e -> {
-            s.setScene(new MainMenu(name).createScreen(s));
+            switchTo(s, new MainMenu(name));
         });
 
         BorderPane pane = new BorderPane();
@@ -56,6 +57,6 @@ public class TopTimesScene extends Screens{
         pane.setCenter(table);
         pane.setBottom(backButton);
 
-        return new Scene(pane, Constants.width, Constants.height);
+        return pane;
     }
 }

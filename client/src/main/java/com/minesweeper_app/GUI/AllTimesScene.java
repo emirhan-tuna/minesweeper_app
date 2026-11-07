@@ -1,6 +1,7 @@
 package com.minesweeper_app.GUI;
 
 import com.minesweeper_app.api.ApiClient;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -14,7 +15,7 @@ public class AllTimesScene extends Screens{
     }
 
     @Override 
-    public Scene createScreen(Stage s) {
+    public Parent createRoot(Stage s) {
         ChoiceBox<String> diffBox = new ChoiceBox<>();
         diffBox.getItems().addAll(Constants.beginner, Constants.medium, Constants.expert);
 
@@ -32,7 +33,7 @@ public class AllTimesScene extends Screens{
         Button back = new Button("Go back.");
 
         back.setOnAction(event -> {
-            s.setScene(new MainMenu(name).createScreen(s));
+            switchTo(s, new MainMenu(name));
         });
 
         BorderPane pane = new BorderPane();
@@ -40,6 +41,6 @@ public class AllTimesScene extends Screens{
         pane.setCenter(lView);
         pane.setBottom(back);
 
-        return new Scene(pane, Constants.width, Constants.height);
+        return pane;
     }
 }

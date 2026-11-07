@@ -6,6 +6,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,7 +25,7 @@ public class WaitingScene extends Screens{
     public WaitingScene(String aName) {super(aName);}
 
     @Override
-    public Scene createScreen(Stage s) {
+    public Parent createRoot(Stage s) {
         VBox box = new VBox(20);
         box.setAlignment(Pos.CENTER);
         Label textLabel = new Label("Looking for a player");
@@ -37,12 +38,12 @@ public class WaitingScene extends Screens{
         cancelButton.setMinSize(Constants.buttonWidth, Constants.buttonHeight);
 
         cancelButton.setOnAction(event -> {
-            s.setScene(handleCancel(s));
+            handleCancel(s);
         });
 
         box.getChildren().addAll(error, textLabel,indicator, cancelButton);
         startPolling(s);
-        return new Scene(box, Constants.width, Constants.height);
+        return box;
     }
 
     private void startPolling(Stage s) {
@@ -77,14 +78,14 @@ public class WaitingScene extends Screens{
                     ApiClient.MatchView view = ApiClient.get().getMatchState(response.matchID());
                     timeline.stop();
                     left = true;
-                    s.setScene(new MatchBoardScene(view, name).createScreen(s));
+                    switchTo(s, new MatchBoardScene(view, name));
                 } else if (response.status().equals("WAITING")) {
                     request = false;
                 } else {
                     request = false;
                     timeline.stop();
                     left = true;
-                    s.setScene(new MainMenu(name).createScreen(s));
+                    switchTo(s, new MainMenu(name));
                 }
             } catch (ApiClient.ApiError e) {
                 error.setText(e.getMessage());
@@ -100,21 +101,21 @@ public class WaitingScene extends Screens{
         thread.start();
     }
 
-    public Scene handleCancel(Stage s) {
+    public void handleCancel(Stage s) {
         timeline.stop();
         try {
             ApiClient.JoinResponse response = ApiClient.get().cancel();
             if (response.status().equals("MATCHED")) {
                 left = true;
-                return new MatchBoardScene(ApiClient.get().getMatchState(response.matchID()), name).createScreen(s);
+                switchTo(s, new MatchBoardScene(ApiClient.get().getMatchState(response.matchID()), name));
             } else {
                 left = true;
-                return new MainMenu(name).createScreen(s);
+                switchTo(s, new MainMenu(name));
             }
         } catch (ApiClient.ApiError e) {
             left = true;
             error.setText(e.getMessage());
-            return new MainMenu(name).createScreen(s);
+            switchTo(s, new MainMenu(name));
         }
     }
 }

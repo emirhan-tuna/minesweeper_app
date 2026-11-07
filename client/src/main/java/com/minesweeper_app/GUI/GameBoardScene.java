@@ -15,7 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class GameBoardScene extends AbstractBoardScene{
+public class GameBoardScene extends AbstractBoardScene<ApiClient.GameView> {
 
     public GameBoardScene(ApiClient.GameView game, String aName) {
         super(game, aName);
@@ -38,5 +38,10 @@ public class GameBoardScene extends AbstractBoardScene{
         if (view.isOver()) {
             end();
         }
+    }
+
+    @Override
+    public void createEnd(int result) {
+        switchTo(s, new EndGameScene(name, result, view));
     }
 }

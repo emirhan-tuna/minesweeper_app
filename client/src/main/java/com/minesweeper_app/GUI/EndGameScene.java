@@ -12,88 +12,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-class EndGameScene extends Screens{
-    private static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-padding: 0; -fx-text-fill: ";
-    private static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px; -fx-padding: 0; -fx-font-weight: bold;";
-    private Image flag = new Image(getClass().getResourceAsStream("/images/flag.png"));
-    private Image mine = new Image(getClass().getResourceAsStream("/images/mine.png"));
-    private Button[][] buttons;
-    private int result;
-    private BoardView view;
+class EndGameScene extends AbstractEndScene{
 
-    public EndGameScene(String name, int result, BoardView resultPane) {
-        super(name);
-        this.result = result;
-        this.view = resultPane;
-        this.buttons = new Button[view.height()][view.width()];
+    public EndGameScene(String name, int result, ApiClient.GameView resultPane) {
+        super(name, result, resultPane);
     }
 
-    @Override 
-    public Scene createScreen(Stage s) {
-        GridPane resultPane = showEndGrid();
-        BorderPane pane = new BorderPane();
-        Label resultLabel = new Label();
-        Button mainMenuButton = new Button("Go back to main menu");
+    @Override
+    public Label setResultLabel() {
+        Label label = new Label();
 
-        mainMenuButton.setOnAction(event -> {
-            s.setScene(new MainMenu(name).createScreen(s));
-        });
         if (result == 0) {
-            resultLabel.setText("You won");
+            label.setText("You cleared the board! Your time is " + view.elapsedSec());
         } else {
-            resultLabel.setText("You lose");
+            label.setText("You clicked a mine!");
         }
 
-        pane.setTop(resultLabel);
-        pane.setCenter(resultPane);
-        pane.setBottom(mainMenuButton);
-
-        return new Scene(pane, Constants.width, Constants.height);
-    }
-
-    private GridPane showEndGrid() {
-        GridPane resultPane = new GridPane();
-        resultPane.setAlignment(Pos.CENTER);
-        for (int i = 0; i < view.height(); i++) {
-            for (int j = 0; j< view.width(); j++) {
-                Button tile = new Button();
-                tile.setPrefSize(30, 30);
-                tile.setMaxSize(30, 30);
-                tile.setMinSize(30, 30);
-
-                buttons[i][j] = tile;
-                resultPane.add(tile, j ,i);
-            }
-        }
-        for (int i = 0; i < view.height(); i++) {
-            for (int j = 0; j < view.width(); j++) {
-                char c = view.rows().get(i).charAt(j);
-                buttons[i][j].setGraphic(null);
-                buttons[i][j].setText("");
-
-                switch (c) {
-                    case '#':
-                        buttons[i][j].setStyle(HIDDEN);
-                        break;
-                    case 'F':
-                        buttons[i][j].setStyle(HIDDEN);
-                        buttons[i][j].setGraphic(new ImageView(flag));
-                        break;
-                    case '*':
-                        buttons[i][j].setStyle(OPEN + "#ff0000");
-                        buttons[i][j].setGraphic(new ImageView(mine));
-                        break;
-                    default:
-                        int mines = c - '0';
-                        buttons[i][j].setStyle(OPEN + Constants.getColor(mines));
-                        if (mines > 0) {
-                            buttons[i][j].setText(Integer.toString(mines));
-                        }
-                        break;
-                }
-            }
-        }
-
-        return resultPane;
+        return label;
     }
 }

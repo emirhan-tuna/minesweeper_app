@@ -1,6 +1,7 @@
 package com.minesweeper_app.GUI;
 
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -14,12 +15,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public abstract class AbstractBoardScene extends Screens{
+public abstract class AbstractBoardScene<V extends BoardView> extends Screens{
 
     private static final String OPEN = "-fx-background-color: #dcdcdc; -fx-border-color: #a0a0a0; -fx-border-width: 0.5px; -fx-font-weight: bold; -fx-padding: 0; -fx-text-fill: ";
     private static final String HIDDEN = "-fx-background-color: #c0c0c0; -fx-border-color: #ffffff #7b7b7b #7b7b7b #ffffff; -fx-border-width: 2px;-fx-padding: 0; -fx-font-weight: bold;";
 
-    protected BoardView view;
+    protected V view;
     protected boolean ended = false;
     private Button[][] buttons;
     protected Label mineNumber = new Label();
@@ -27,14 +28,14 @@ public abstract class AbstractBoardScene extends Screens{
     private Image flag = new Image(getClass().getResourceAsStream("/images/flag.png"));
     private Image mine = new Image(getClass().getResourceAsStream("/images/mine.png"));
 
-    public AbstractBoardScene(BoardView view, String aName) {
+    public AbstractBoardScene(V view, String aName) {
         super(aName);
         this.view = view;
         buttons = new Button[view.height()][view.width()];
     }
 
     @Override
-    public Scene createScreen(Stage stage) {
+    public Parent createRoot(Stage stage) {
         BorderPane layout = new BorderPane();
         this.s = stage;
 
@@ -54,7 +55,7 @@ public abstract class AbstractBoardScene extends Screens{
 
         refresh();
         startPolling();
-        return new Scene(layout, Constants.width, Constants.height);
+        return layout;
     }
 
     protected GridPane showGrid(){
@@ -126,7 +127,7 @@ public abstract class AbstractBoardScene extends Screens{
     }
 
     protected void goBack(Stage s) {
-        s.setScene(new MainMenu(name).createScreen(s));
+        switchTo(s, new MainMenu(name));
     }
 
     protected HBox setTopBar() {
@@ -150,11 +151,13 @@ public abstract class AbstractBoardScene extends Screens{
         }
         this.ended = true;
         if (view.state().equals("WIN")) {
-            s.setScene(new EndGameScene(name, 0, view).createScreen(s));
+            createEnd(0);
         } else {
-            s.setScene(new EndGameScene(name, 1, view).createScreen(s));
+            createEnd(1);
         }
     }
 
     protected void onGameEnded() {}
+
+    abstract void createEnd(int result);
 }

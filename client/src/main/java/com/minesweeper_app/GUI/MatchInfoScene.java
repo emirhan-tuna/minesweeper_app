@@ -2,6 +2,7 @@ package com.minesweeper_app.GUI;
 
 import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -22,7 +23,7 @@ public class MatchInfoScene extends Screens{
     }
 
     @Override
-    public Scene createScreen(Stage s) {
+    public Parent createRoot(Stage s) {
         BorderPane pane = new BorderPane();
         ChoiceBox<String> diffBox = new ChoiceBox<>();
         diffBox.getItems().addAll(Constants.beginner, Constants.medium, Constants.expert);
@@ -48,7 +49,7 @@ public class MatchInfoScene extends Screens{
         Button backButton = new Button("Go back to main menu");
 
         backButton.setOnAction(event -> {
-            s.setScene(new MainMenu(name).createScreen(s));
+            switchTo(s, new MainMenu(name));
         });
         HBox botBox = new HBox(20);
         botBox.setAlignment(Pos.CENTER);
@@ -60,6 +61,6 @@ public class MatchInfoScene extends Screens{
         pane.setCenter(midBox);
         pane.setBottom(botBox);
 
-        return new Scene(pane, Constants.width, Constants.height);
+        return pane;
     }
 }

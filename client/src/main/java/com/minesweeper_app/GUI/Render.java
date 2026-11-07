@@ -1,8 +1,10 @@
 package com.minesweeper_app.GUI;
 
 import atlantafx.base.theme.PrimerDark;
-import atlantafx.base.theme.PrimerLight;
+
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Render extends Application{
@@ -11,7 +13,11 @@ public class Render extends Application{
     public void start(Stage stage) {
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         stage.setTitle("Minesweeper");
-        stage.setScene(new LoginScreen().createScreen(stage));
+        LoginScreen screen = new LoginScreen();
+        screen.s = stage;
+        Constants.setSizes(Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+        stage.setScene(new Scene(screen.createRoot(stage)));
+        stage.setMaximized(true);
         stage.show();
     }
 

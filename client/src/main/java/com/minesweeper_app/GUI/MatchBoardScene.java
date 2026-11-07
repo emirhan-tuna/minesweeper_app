@@ -10,12 +10,12 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class MatchBoardScene extends AbstractBoardScene{
+public class MatchBoardScene extends AbstractBoardScene<ApiClient.MatchView> {
     private final ApiClient.MatchView matchView;
     private Timeline timeline;
     private boolean request;
 
-    public MatchBoardScene(BoardView view, String aName) {
+    public MatchBoardScene(ApiClient.MatchView view, String aName) {
         super (view, aName);
         this.matchView = (ApiClient.MatchView) view;
     }
@@ -46,7 +46,7 @@ public class MatchBoardScene extends AbstractBoardScene{
             view = ApiClient.get().forfeit(view.id());
         } catch (ApiClient.ApiError e) {
             error.setText(e.getMessage());
-            s.setScene(new MainMenu(name).createScreen(s));
+            switchTo(s, new MainMenu(name));
             return;
         }
         end();
@@ -104,5 +104,10 @@ public class MatchBoardScene extends AbstractBoardScene{
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
+    }
+
+    @Override
+    public void createEnd(int result) {
+        switchTo(s, new EndMatchScene(name, result, view));
     }
 }

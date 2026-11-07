@@ -2,6 +2,7 @@ package com.minesweeper_app.GUI;
 
 import com.minesweeper_app.api.ApiClient;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +18,7 @@ public class TakeParameters extends Screens{
     }
 
     @Override 
-    public Scene createScreen(Stage s) {
+    public Parent createRoot(Stage s) {
         VBox pane = new VBox(15);
         pane.setAlignment(Pos.CENTER);
 
@@ -53,7 +54,7 @@ public class TakeParameters extends Screens{
         pane.getChildren().addAll(buttonSmall, buttonMed, buttonBig, error);
 
 
-        return new Scene(pane, Constants.width, Constants.height);
+        return pane;
     }
 
     /*public int takeInt(String message) {
@@ -73,21 +74,20 @@ public class TakeParameters extends Screens{
 
     private void startGame(Stage s, String diff) {
         ApiClient.GameView view = ApiClient.get().newGame(diff);
-        s.setScene(new GameBoardScene(view, name).createScreen(s));
+        switchTo(s, new GameBoardScene(view, name));
     }
 
     private void startMatch(Stage s, String diff) {
         try {
             ApiClient.JoinResponse response = ApiClient.get().joinQueue(diff);
             if (response.status().equals("WAITING")) {
-                s.setScene(new WaitingScene(this.name).createScreen(s));
+                switchTo(s, new WaitingScene(name));
             } else if (response.status().equals("MATCHED")){
                 ApiClient.MatchView view = ApiClient.get().getMatchState(response.matchID());
-                s.setScene(new MatchBoardScene(view, name).createScreen(s));
+                switchTo(s, new MatchBoardScene(view, name));
             }
         } catch (ApiClient.ApiError e) {
             error.setText(e.getMessage());
-            return;
         }
     }
 }

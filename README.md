@@ -1,6 +1,6 @@
 # Client-Server Minesweeper
 
-A minesweeper app that uses client-server architecture with single-player and multiplayer game modes. Built with JavaFX, Spring Boot and MySQL.
+A minesweeper app that uses client-server architecture with single-player and multiplayer game modes, deployed on an Ubuntu VPS behind HTTPS. Built with JavaFX, Spring Boot and MySQL.
 
 ## Screenshots of UI and Gameplay
 
@@ -20,6 +20,8 @@ A minesweeper app that uses client-server architecture with single-player and mu
 - Login and register
 - Online race mode: matchmaking, same board for both players and disconnect handling
 - Ability to see the total statistics for online games
+- Synchronized countdown before matches
+- Hosted online server
 
 ## Tech Used
 
@@ -31,6 +33,8 @@ A minesweeper app that uses client-server architecture with single-player and mu
 - BCrypt
 - Maven
 - AtlantaFX
+- Caddy
+- systemd
 
 ## Architecture and Design Points
 
@@ -51,17 +55,37 @@ A minesweeper app that uses client-server architecture with single-player and mu
   - MySQL
   - Maven
 
-### Steps
+### Playing Online Steps
 
-1. Create the database
-   - In MySQL, run CREATE DATABASE minesweeper;
-2. Copy the server/application-local-example.properties to application-local.properties and set the database password
-   - The default name for database user is root it can be changed in application-local.properties
+Install the client and run it. It connects to the server by default.
+
+### Playing Offline Steps
+
+1. Start MySql
+2. Create the local properties file with your DB password
 3. Start the server
-    - Run ```bash ./mvnw spring-boot:run``` in server folder
-4. Start one client for singleplayer experience
-    - Run ```bash mvn javafx:run```in client folder
-5. Create two clients for trying multiplayer experience
+4. Point the client to the local server by changing client properties to *"http://localhost:8080/"*
+5. Start the client
+
+## Configuration
+
+- Client
+  - server.url --- Clients connection point to server
+- Server
+  - Environment Variables
+    1. DB_URL → Database url for the server
+    2. DB_USER → Database username
+    3. DB_PASSWORD → Database's password
+    4. SERVER_ADDRESS → Default's to 127.0.0.1 so that server only listens to local connections
+
+## Deployment
+
+- Server runs on an Ubuntu VPS
+- Spring Boot App runs as a systemd service under a restricted system user
+- Caddy acts as a reverse proxy
+- MySql runs locally on the server
+- Secrets live in the server
+- Firewall only allows SSH, HTTP, HTTPS
 
 ## Credits
 
@@ -83,8 +107,8 @@ A minesweeper app that uses client-server architecture with single-player and mu
 
 ### Next Features
 
-- Hosting the server online
-- Countdown before each match start
+- Hosting the server online  --- *Done*
+- Countdown before each match start --- *Done*
 - Installers for major OS's
-- Fixing the UI of EndGameScene
+- Fixing the UI of EndGameScene --- *Done*
   - Having two different scenes for games and matches

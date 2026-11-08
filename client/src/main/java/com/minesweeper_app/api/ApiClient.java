@@ -7,16 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minesweeper_app.gui.board.BoardView;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class ApiClient {
 
-    private static final ApiClient INSTANCE = new ApiClient("http://localhost:8080/");
+    private static final ApiClient INSTANCE = new ApiClient(loadServerURL());
 
     public static ApiClient get() {
         return INSTANCE;
@@ -161,6 +163,19 @@ public class ApiClient {
         }catch (IOException e) {
             return "Error" + res.statusCode();
         }
+    }
+
+    private static String loadServerURL() {
+        Properties prop = new Properties();
+        String fallback = "http://localhost:8080/";
+
+        try (InputStream in = ApiClient.class.getResourceAsStream("/client.properties")){
+            if (in != null) {
+                prop.load(in);
+            }
+        } catch (IOException ignored) {
+        }
+        return prop.getProperty("server.url", fallback);
     }
 
 }
